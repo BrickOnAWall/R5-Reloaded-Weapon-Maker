@@ -5,10 +5,10 @@
 
 
 replace1
-replace2
-replace3
-replace4
-replace5
+TestWeaponThingy
+Tester
+21
+12
 replace6
 replace7
 replace8
@@ -18,11 +18,11 @@ WeaponData
 	// General
 	"printname"   									"replace1"
 	"shortprintname"								"replace1"
-	"description" 									"replace2"
-	"longdesc"										"replace2"
+	"description" 									"TestWeaponThingy"
+	"longdesc"										"TestWeaponThingy"
 
 	"weapon_type_flags"								"WPT_PRIMARY"
-	"ammo_pool_type"								"replace3"
+	"ammo_pool_type"								"Tester"
 
 	// UI/HUD
 	"menu_icon"										"rui/weapon_icons/r5/weapon_r301"

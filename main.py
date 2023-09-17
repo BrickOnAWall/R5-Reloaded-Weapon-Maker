@@ -220,8 +220,6 @@ class Tab1(QWidget):
     #Generate the weapon using user input
     def generate_weapon(self):
         global ammo_types, replaceNum
-        search_text = "replace" + str(replaceNum)
-        print(search_text)
         selected_weapon = weapon_name.text()
         weapon_rifle = os.path.join(os.path.dirname(__file__), "weapon_types/mp_weapon_types.txt")
         print(selected_model)
@@ -239,9 +237,9 @@ class Tab1(QWidget):
         print(weapon_rifle, weapon_name.text())
         
         for file in os.listdir(os.path.join(os.path.dirname(__file__), "weapon_types")):
-            shutil.copy(os.path.join(os.path.dirname(__file__), "weapon_types", file), os.path.join(os.path.dirname(__file__), "mp_weapon_" + selected_weapon.lower() + ".txt"))
+           custom_weapon = shutil.copy(os.path.join(os.path.dirname(__file__), "weapon_types", file), os.path.join(os.path.dirname("output"), "output/mp_weapon_" + selected_weapon.lower() + ".txt"))
         
-        custom_weapon = os.path.join(os.path.dirname(__file__), "mp_weapon_" + selected_weapon.lower() + ".txt")
+        replaceNum += 1
         
         with open((custom_weapon), 'r') as file:
   
@@ -252,7 +250,23 @@ class Tab1(QWidget):
         
             # Searching and replacing the text
             # using the replace() function
+            search_text = "replace" + str(replaceNum)
             data = data.replace(search_text, weapon_name.text())
+            replaceNum += 1
+            
+            search_text = "replace" + str(replaceNum)
+            data = data.replace(search_text, weapon_description.text())
+            replaceNum += 1
+            
+            search_text = "replace" + str(replaceNum)
+            data = data.replace(search_text, weapon_near.text())
+            replaceNum += 1
+            
+            search_text = "replace" + str(replaceNum)
+            data = data.replace(search_text, weapon_far.text())
+            replaceNum += 1
+        
+            
         
         with open(custom_weapon, 'w') as file:
     
