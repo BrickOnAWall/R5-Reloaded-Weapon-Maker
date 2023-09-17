@@ -45,6 +45,7 @@ class Tab1(QWidget):
         weapon_tree = QTreeWidget()
         weapon_tree.setHeaderLabels(["Model Type:", "Model Name:", "Common Name:"])
         weapon_tree.setColumnWidth(0, 100)
+        weapon_tree.setFixedHeight(200)
         
         #Create style sheet for tree table
         weapon_tree.setStyleSheet("height:125px")
