@@ -8,43 +8,6 @@ from PyQt5.QtWidgets import QFileDialog, QRadioButton, QTreeWidgetItem, QApplica
 class Tab1(QWidget):
     def __init__(self):
 
-        alternator = "mp_weapon_alternator_smg"
-        charge_Rifle = "mp_weapon_defender"
-        devotion = "mp_weapon_esaw"
-        epg = "mp_weapon_epg"
-        eva = "mp_weapon_shotgun"
-        flatline = "mp_weapon_vinson"
-        g7 = "mp_weapon_g2"
-        havoc = "mp_weapon_energy_ar"
-        hemlok = "mp_weapon_hemlok"
-        kraber = "mp_weapon_sniper"
-        longbow = "mp_weapon_dmr"
-        lstar = "mp_weapon_lstar"
-        mastiff = "mp_weapon_mastiff"
-        mozambique = "mp_weapon_shotgun_pistol"
-        p2020 = "mp_weapon_semipistol"
-        peacekeeper = "mp_weapon_energy_shotgun"
-        prowler = "mp_weapon_pdw"
-        r301 = "mp_weapon_rspn101"
-        r99 = "mp_weapon_r97"
-        re45 = "mp_weapon_autopistol"
-        smart_pistol = "mp_weapon_smart_pistol"
-        spitfire = "mp_weapon_lmg"
-        triple_take = "mp_weapon_doubletake"
-        wingman = "mp_weapon_wingman"
-        
-        
-        common_names = ["alternator", "charge_Rifle", "devotion", 
-                        "eva", "flatline", "g7", "havoc", "hemlok", "kraber",
-                        "longbow", "lstar", "mastiff", "mozambique","p2020",
-                        "peacekeeper", "prowler", "r301", "r99", "re45", 
-                        "spitfire", "triple_take", "wingman"]
-
-        rifles = [flatline, havoc, hemlok, lstar, r301, spitfire, devotion]
-        shotguns = [eva, peacekeeper, mozambique, mastiff]
-        pistols = [p2020, re45, wingman]
-        smgs = [alternator, prowler, r99]
-        snipers = [triple_take, longbow, kraber, g7, charge_Rifle]
 
         settings_menu = QMenu("Settings")
         
@@ -85,27 +48,96 @@ class Tab1(QWidget):
         weapon_tree.setAlternatingRowColors(True)
         weapon_tree.setSelectionBehavior(QAbstractItemView.SelectRows)
         weapon_tree.setSelectionMode(QAbstractItemView.SingleSelection)
-
-        #Add weapons to correct tree table column
-        weaponss = {
-            "RIFLE": rifles,
-            "SHOTGUN": shotguns,
-            "SNIPER": snipers,
-            "PISTOL": pistols,
-            "SMG": smgs
+        
+        
+        weapon_data = {
+            "RIFLE": {
+                "names": ["flatline", "havoc", "hemlok", "r301"],
+                "common_names": ["Flatline", "Havoc", "Hemlok", "R-301"],
+            },
+            "LMG": {
+                "names": ["spitfire", "devotion", "lstar"],
+                "common_names": ["Spitfire", "Devotion", "L-STAR"],
+            },
+            "SHOTGUN": {
+                "names": ["eva", "peacekeeper", "mozambique", "mastiff"],
+                "common_names": ["EVA-8", "Peacekeeper", "Mozambique", "Mastiff"],
+            },
+            "PISTOL": {
+                "names": ["p2020", "re45", "wingman"],
+                "common_names": ["P2020", "RE-45", "Wingman"],
+            },
+            "SMG": {
+                "names": ["alternator", "prowler", "r99"],
+                "common_names": ["Alternator", "Prowler", "R-99"],
+            },
+            "SNIPER": {
+                "names": ["triple_take", "longbow", "kraber", "g7", "charge_Rifle"],
+                "common_names": ["Triple Take", "Longbow", "Kraber", "G7 Scout", "Charge Rifle"],
+            },
         }
         
-        #Add the weapon type, the model name, and the common name to the tree table
+        weapon_variables = {
+            "alternator": "mp_weapon_alternator_smg",
+            "charge_Rifle": "mp_weapon_defender",
+            "devotion": "mp_weapon_esaw",
+            "epg": "mp_weapon_epg",
+            "eva": "mp_weapon_shotgun",
+            "flatline": "mp_weapon_vinson",
+            "g7": "mp_weapon_g2",
+            "havoc": "mp_weapon_energy_ar",
+            "hemlok": "mp_weapon_hemlok",
+            "kraber": "mp_weapon_sniper",
+            "longbow": "mp_weapon_dmr",
+            "lstar": "mp_weapon_lstar",
+            "mastiff": "mp_weapon_mastiff",
+            "mozambique": "mp_weapon_shotgun_pistol",
+            "p2020": "mp_weapon_semipistol",
+            "peacekeeper": "mp_weapon_energy_shotgun",
+            "prowler": "mp_weapon_pdw",
+            "r301": "mp_weapon_rspn101",
+            "r99": "mp_weapon_r97",
+            "re45": "mp_weapon_autopistol",
+            "smart_pistol": "mp_weapon_smart_pistol",
+            "spitfire": "mp_weapon_lmg",
+            "triple_take": "mp_weapon_doubletake",
+            "wingman": "mp_weapon_wingman",
+        }
         
-        a = 0
-        for weapon_type, common_names in weaponss.items():
-            for weapon in common_names:
-                print(a)
-                if(a>5):
-                    weapon_tree.addTopLevelItem(QTreeWidgetItem([weapon_type, weapon, common_names]))
-                a = a + 1
         
+    
 
+
+        weapon_tree = QTreeWidget()
+        weapon_tree.setHeaderLabels(["Model Type:", "Model Name:", "Common Name:"])
+        weapon_tree.setColumnWidth(0, 100)
+        
+        # Iterate through weapon_variables and check if they are in the "RIFLE" category of weapon_data
+        for weapon, variable in weapon_variables.items():
+            if weapon in weapon_data["RIFLE"]["names"]:
+                # Add this weapon to the QTreeWidgetItem with "RIFLE" as Model Type
+                weapon_tree.addTopLevelItem(QTreeWidgetItem(["RIFLE", variable, weapon]))
+                
+        for weapon, variable in weapon_variables.items():
+            if weapon in weapon_data["LMG"]["names"]:
+                # Add this weapon to the QTreeWidgetItem with "LMG" as Model Type
+                weapon_tree.addTopLevelItem(QTreeWidgetItem(["LMG", variable, weapon]))
+                
+        for weapon, variable in weapon_variables.items():
+            if weapon in weapon_data["SHOTGUN"]["names"]:
+                # Add this weapon to the QTreeWidgetItem with "SHOTGUN" as Model Type
+                weapon_tree.addTopLevelItem(QTreeWidgetItem(["SHOTGUN", variable, weapon]))
+                
+        for weapon, variable in weapon_variables.items():
+            if weapon in weapon_data["SNIPER"]["names"]:
+                # Add this weapon to the QTreeWidgetItem with "SNIPER" as Model Type
+                weapon_tree.addTopLevelItem(QTreeWidgetItem(["SNIPER", variable, weapon]))
+                
+        for weapon, variable in weapon_variables.items():
+            if weapon in weapon_data["PISTOL"]["names"]:
+                # Add this weapon to the QTreeWidgetItem with "PISTOL" as Model Type
+                weapon_tree.addTopLevelItem(QTreeWidgetItem(["PISTOL", variable, weapon]))
+                
         layout.addWidget(weapon_tree)
         
         
@@ -218,6 +250,7 @@ class MyWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("R5 Reloaded | Weapon Maker")
         self.setGeometry(600, 350, 650, 300)
+
         
         #Create settings menu
         settings_menu = QMenu("Settings", self)
