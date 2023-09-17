@@ -1,5 +1,5 @@
 #Importing PyQt5, and system
-import sys, webbrowser, os
+import sys, webbrowser, os, shutil, string
 from PyQt5.QtWidgets import QFileDialog, QRadioButton, QTreeWidgetItem, QApplication, QMainWindow, QWidget, QVBoxLayout, QTabWidget, QLabel, QPushButton, QListWidget, QLineEdit, QToolBar, QMenuBar, QMessageBox, QMenu, QMessageBox, QTableWidget, QTreeWidget, QTableWidgetItem, QAbstractItemView, QAbstractScrollArea, QAbstractItemView
 
 
@@ -18,6 +18,9 @@ class Tab1(QWidget):
         title = QLabel("Weapon Info: ")
         title.setStyleSheet("font: bold;")
         layout.addWidget(title)
+        
+        global replaceNum 
+        replaceNum = 1
 
         #Create weapon name input
         global weapon_name
@@ -216,8 +219,10 @@ class Tab1(QWidget):
 
     #Generate the weapon using user input
     def generate_weapon(self):
-        global ammo_types
-        
+        global ammo_types, replaceNum
+        search_text = "replace" + str(replaceNum)
+        print(search_text)
+        selected_weapon = weapon_name.text()
         weapon_rifle = os.path.join(os.path.dirname(__file__), "weapon_types/mp_weapon_types.txt")
         print(selected_model)
         
@@ -231,13 +236,37 @@ class Tab1(QWidget):
             return
         
         #Clone weapon_rifle to game_folder
-        print(weapon_rifle)
+        print(weapon_rifle, weapon_name.text())
         
-
+        for file in os.listdir(os.path.join(os.path.dirname(__file__), "weapon_types")):
+            shutil.copy(os.path.join(os.path.dirname(__file__), "weapon_types", file), os.path.join(os.path.dirname(__file__), "mp_weapon_" + selected_weapon.lower() + ".txt"))
+        
+        custom_weapon = os.path.join(os.path.dirname(__file__), "mp_weapon_" + selected_weapon.lower() + ".txt")
+        
+        with open((custom_weapon), 'r') as file:
+  
+            # Reading the content of the file
+            # using the read() function and storing
+            # them in a new variable
+            data = file.read()
+        
+            # Searching and replacing the text
+            # using the replace() function
+            data = data.replace(search_text, weapon_name.text())
+        
+        with open(custom_weapon, 'w') as file:
+    
+            # Writing the replaced data in our
+            # text file
+            file.write(data)
+  
+# Printing Text replaced
+print("Text replaced")
+        
         #Give user success popup
-        QMessageBox.information(self, "Success", "Weapon created with info: \n" + "Name: " + weapon_name.text() + "\n" + "Desc: "
-                                + weapon_description.text() + "\n" + "Near Damage: " + weapon_near.text() + "\n" + "Far Damage: " 
-                                + weapon_far.text() + "Model: " + selected_model + "\nGenerated at: " + game_folder)
+        #QMessageBox.information(self, "Success", "Weapon created with info: \n" + "Name: " + weapon_name.text() + "\n" + "Desc: "
+                                #+ weapon_description.text() + "\n" + "Near Damage: " + weapon_near.text() + "\n" + "Far Damage: " 
+                                #+ weapon_far.text() + "Model: " + selected_model + "\nGenerated at: " + game_folder)
             
 
 
@@ -291,7 +320,6 @@ class MyWindow(QMainWindow):
                 f.write(folder)
                 
         
-
         help_action.triggered.connect(openLink)
         game_folder.triggered.connect(folderOpener)
         
@@ -300,12 +328,5 @@ class MyWindow(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MyWindow()
-    if os.path.exists("game_folder.txt"):
-                with open("game_folder.txt", "r") as f:
-                    game_folder = os.pat
-                    print(game_folder)
-    else:
-        game_folder = os.path.join(os.path.dirname(__file__), "game_folder")
-                    
     window.show()
     sys.exit(app.exec_())
