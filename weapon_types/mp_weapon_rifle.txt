@@ -6,9 +6,9 @@ WeaponData
 {
 	// General
 	"printname"   									"replace1"
-	"shortprintname"								"#WPN_RSPN101_SHORT"
-	"description" 									"#WPN_RSPN101_DESC"
-	"longdesc"										"#WPN_RSPN101_LONGDESC"
+	"shortprintname"								"replace1"
+	"description" 									"replace2"
+	"longdesc"										"replace2"
 
 	"weapon_type_flags"								"WPT_PRIMARY"
 	"ammo_pool_type"								"bullet"

@@ -33,14 +33,15 @@ class Tab1(QWidget):
         triple_take = "mp_weapon_doubletake"
         wingman = "mp_weapon_wingman"
         
-        common_names = ["alternator", "charge_Rifle", "devotion", "epg", 
+        
+        common_names = ["alternator", "charge_Rifle", "devotion", 
                         "eva", "flatline", "g7", "havoc", "hemlok", "kraber",
                         "longbow", "lstar", "mastiff", "mozambique","p2020",
                         "peacekeeper", "prowler", "r301", "r99", "re45", 
-                        "smart_pistol", "spitfire", "triple_take", "wingman"]
+                        "spitfire", "triple_take", "wingman"]
 
         rifles = [flatline, havoc, hemlok, lstar, r301, spitfire, devotion]
-        shotguns = [eva, peacekeeper, mozambique]
+        shotguns = [eva, peacekeeper, mozambique, mastiff]
         pistols = [p2020, re45, wingman]
         smgs = [alternator, prowler, r99]
         snipers = [triple_take, longbow, kraber, g7, charge_Rifle]
@@ -76,7 +77,7 @@ class Tab1(QWidget):
         #Create a tree table including the weapon categories
         global weapon_tree
         weapon_tree = QTreeWidget()
-        weapon_tree.setHeaderLabels(["Model Type:", "Model Name:"])
+        weapon_tree.setHeaderLabels(["Model Type:", "Model Name:", "Common Name:"])
         weapon_tree.setColumnWidth(0, 100)
         
         #Create style sheet for tree table
@@ -94,9 +95,16 @@ class Tab1(QWidget):
             "SMG": smgs
         }
         
-        for weapon_type, weapon_list in weaponss.items():
-            for weapon in weapon_list:
-                weapon_tree.addTopLevelItem(QTreeWidgetItem([weapon_type, weapon, common_names[0]]))
+        #Add the weapon type, the model name, and the common name to the tree table
+        
+        a = 0
+        for weapon_type, common_names in weaponss.items():
+            for weapon in common_names:
+                print(a)
+                if(a>5):
+                    weapon_tree.addTopLevelItem(QTreeWidgetItem([weapon_type, weapon, common_names]))
+                a = a + 1
+        
 
         layout.addWidget(weapon_tree)
         
@@ -105,8 +113,11 @@ class Tab1(QWidget):
         def getModel(item):
             global selected_model, weapon_class, weapon_IN
             selected_model = weapon_tree.currentItem()
+            global weapon_class
             weapon_class = selected_model.text(0)
+            global weapon_IN
             weapon_IN = selected_model.text(1)
+            print(weapon_class, weapon_IN)
         weapon_tree.currentItemChanged.connect(getModel)
         
 
@@ -174,9 +185,10 @@ class Tab1(QWidget):
     #Generate the weapon using user input
     def generate_weapon(self):
         global ammo_types
-        print(selected_model)
+        
         weapon_rifle = os.path.join(os.path.dirname(__file__), "weapon_types/mp_weapon_types.txt")
-
+        print(selected_model)
+        
         #Check if user input is valid
         if weapon_name.text() == "" or weapon_description.text() == "" or weapon_near.text() == "" or weapon_far.text() == "" or ammo_types.count() == 0:
             QMessageBox.warning(self, "Error", "Please fill out all fields")
@@ -257,7 +269,10 @@ if __name__ == "__main__":
     window = MyWindow()
     if os.path.exists("game_folder.txt"):
                 with open("game_folder.txt", "r") as f:
-                    game_folder = f.read()
+                    game_folder = os.pat
                     print(game_folder)
+    else:
+        game_folder = os.path.join(os.path.dirname(__file__), "game_folder")
+                    
     window.show()
     sys.exit(app.exec_())
