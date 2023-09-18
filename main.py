@@ -28,6 +28,8 @@ class Tab1(QWidget):
         weapon_name.setPlaceholderText("Weapon Name")
         layout.addWidget(weapon_name)
         
+        
+        
         #Create weapon description input
         global weapon_description
         weapon_description = QLineEdit()
@@ -216,6 +218,11 @@ class Tab1(QWidget):
         #Add Widgets to layout
         self.setLayout(layout)
 
+    
+    #Call generation.py from dirtory
+    def generate_weapon(self):
+        os.system("python3 generate.py")
+    
         
 
     #Generate the weapon using user input
@@ -223,7 +230,22 @@ class Tab1(QWidget):
         global ammo_types, replaceNum
         selected_weapon = weapon_name.text()
         weapon_rifle = os.path.join(os.path.dirname(__file__), "weapon_types/mp_weapon_types.txt")
-        print(selected_model)
+        print(selected_weapon)
+        
+        #Check if variable contains a space
+        if weapon_name.text().find(" ")!= -1:
+            QMessageBox.warning(self, "Error", "Weapon name cannot contain a space")
+            return
+            
+        #Check if weapon_name is greater than 15 characters
+        if len(weapon_name.text()) > 15:
+            QMessageBox.warning(self, "Error", "Weapon name cannot be greater than 15 characters")
+            return
+                    
+        
+        if game_folder.text() == "":
+            QMessageBox.warning(self, "Error", "Please select a game folder")
+            return
         
         #Check if user input is valid
         if weapon_name.text() == "" or weapon_description.text() == "" or weapon_near.text() == "" or weapon_far.text() == "" or ammo_types.count() == 0:
@@ -240,7 +262,11 @@ class Tab1(QWidget):
         for file in os.listdir(os.path.join(os.path.dirname(__file__), "weapon_types")):
            custom_weapon = shutil.copy(os.path.join(os.path.dirname(__file__), "weapon_types", file), os.path.join(os.path.dirname("output"), "output/mp_weapon_" + selected_weapon.lower() + ".txt"))
         
-        replaceNum += 1
+        
+
+        
+        
+
         
         with open((custom_weapon), 'r') as file:
   
@@ -258,15 +284,20 @@ class Tab1(QWidget):
             search_text = "replace" + str(replaceNum)
             data = data.replace(search_text, weapon_description.text())
             replaceNum += 1
-            
-            search_text = "replace" + str(replaceNum)
-            data = data.replace(search_text, weapon_near.text())
-            replaceNum += 1
+        
             
             search_text = "replace" + str(replaceNum)
             data = data.replace(search_text, weapon_far.text())
             replaceNum += 1
         
+        
+            search_text = "replace" + str(replaceNum)
+            data = data.replace(search_text, weapon_near.text())
+            replaceNum += 1
+            
+            search_text = "replace" + str(replaceNum)
+            data = data.replace(search_text, weapon_IN)
+            replaceNum += 1
             
         
         with open(custom_weapon, 'w') as file:
@@ -291,6 +322,7 @@ print("Text replaced")
 #Create new window
 class MyWindow(QMainWindow):
     def __init__(self):
+        global outfolder
         super().__init__()
         self.setWindowTitle("R5 Reloaded | Weapon Maker")
         self.setGeometry(600, 350, 650, 300)
@@ -301,6 +333,7 @@ class MyWindow(QMainWindow):
         self.menuBar().addMenu(settings_menu)
         
         
+        global game_folder
         game_folder = settings_menu.addAction("Choose Game Folder")
     
         
@@ -323,16 +356,17 @@ class MyWindow(QMainWindow):
             
         #Create a function to select a game folder when game folder is pressed
         def folderOpener():
-            folder = QFileDialog.getExistingDirectory(self, "Select Game Folder")
+            outfolder = QFileDialog.getExistingDirectory(self, "Select Game Folder")
+            print(outfolder)
             
             #Create a file that saves the folder path 
             #Check if folder already exists
             if os.path.exists("game_folder.txt"):
                 with open("game_folder.txt", "r") as f:
-                    f.write(folder)
+                    f.write(outfolder)
 
             with open("game_folder.txt", "w") as f:
-                f.write(folder)
+                f.write(outfolder)
                 
         
         help_action.triggered.connect(openLink)
